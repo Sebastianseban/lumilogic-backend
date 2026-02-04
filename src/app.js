@@ -5,6 +5,8 @@ import helmet from "helmet";
 import cors from "cors";
 
 import { errorHandler, notFound } from "./middleware/errorHandler.middleware.js";
+import adminRoutes from "./routes/admin.routes.js"
+
 
 const app = express()
 
@@ -21,6 +23,8 @@ app.use(
   })
 );
 
+
+router.use("api/v1/admin", adminRoutes);
 
 app.get("/health", (req, res) => {
   res.send("lumilogic Backend Running 🚀");
