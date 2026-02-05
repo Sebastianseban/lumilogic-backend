@@ -4,6 +4,8 @@ import connectDB from "./db/database.js";
 
 
 
+
+
 connectDB()
   .then(() => {
     app.listen(PORT || 5000, () => {
@@ -13,3 +15,6 @@ connectDB()
   .catch((error) => {
     console.log("MONGODB Connection failed!", error);
   });
+
+
+  

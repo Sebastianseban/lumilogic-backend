@@ -32,9 +32,7 @@ const CategorySchema = new mongoose.Schema(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 export const Category = mongoose.model("Category", CategorySchema);
