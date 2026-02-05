@@ -6,6 +6,7 @@ import cors from "cors";
 
 import { errorHandler, notFound } from "./middleware/errorHandler.middleware.js";
 import adminRoutes from "./routes/admin.routes.js"
+import PublicPagesRoutes from "./routes/publicPage.routes.js"
 
 
 const app = express()
@@ -24,7 +25,8 @@ app.use(
 );
 
 
-router.use("api/v1/admin", adminRoutes);
+app.use("api/v1/admin", adminRoutes);
+app.use("api/v1/",PublicPagesRoutes)
 
 app.get("/health", (req, res) => {
   res.send("lumilogic Backend Running 🚀");
