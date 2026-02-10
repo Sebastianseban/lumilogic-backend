@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { seedCategories } from "./category.seed.js";
-import { seedPages } from "./page.seed.js";
+
 import { MONGODB_URI } from "../config/config.js";
+import { seedPages } from "./page.seed.js";
 
 const runSeed = async () => {
   try {

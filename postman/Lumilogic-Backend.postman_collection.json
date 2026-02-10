@@ -1,0 +1,302 @@
+{
+  "info": {
+    "name": "Lumilogic Backend API",
+    "description": "Postman collection for Lumilogic backend APIs.\n\nBase URL uses {{baseUrl}}.\n\nAuth:\n- Run `Admin > Login` first to automatically set `{{accessToken}}` from response.data.accessToken.\n- Admin page endpoints use Bearer {{accessToken}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Checks service availability."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "login"
+              ]
+            },
+            "description": "Authenticates admin. On success, response.data.accessToken is saved into {{accessToken}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.accessToken) {",
+                  "  pm.environment.set('accessToken', json.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Page",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Home\",\n  \"slug\": \"home\",\n  \"type\": \"home\",\n  \"categoryId\": null,\n  \"blocks\": [\n    {\n      \"type\": \"hero\",\n      \"data\": {\n        \"heading\": \"Welcome to Lumilogic\",\n        \"ctaText\": \"Get Started\"\n      }\n    }\n  ],\n  \"seo\": {\n    \"title\": \"Lumilogic Home\",\n    \"description\": \"Lumilogic official homepage\"\n  },\n  \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/pages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "pages"
+              ]
+            },
+            "description": "Creates a page. Required: title, slug, type."
+          }
+        },
+        {
+          "name": "Get All Pages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/pages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "pages"
+              ]
+            },
+            "description": "Returns all pages sorted by newest first (without blocks field)."
+          }
+        },
+        {
+          "name": "Update Page",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Home\",\n  \"type\": \"home\",\n  \"isPublished\": true,\n  \"seo\": {\n    \"title\": \"Updated SEO Title\",\n    \"description\": \"Updated SEO Description\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "pages",
+                "{{pageId}}"
+              ]
+            },
+            "description": "Updates page by MongoDB _id. Note: slug is intentionally ignored by backend update logic."
+          }
+        },
+        {
+          "name": "Delete Page",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "pages",
+                "{{pageId}}"
+              ]
+            },
+            "description": "Deletes page by MongoDB _id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Get Menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/menu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "menu"
+              ]
+            },
+            "description": "Returns active category tree with published pages attached to categories."
+          }
+        },
+        {
+          "name": "Get Published Pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/pages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "pages"
+              ]
+            },
+            "description": "Returns published pages list with selected fields: title, slug, type, seo, createdAt."
+          }
+        },
+        {
+          "name": "Get Page By Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/pages/{{slug}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "pages",
+                "{{slug}}"
+              ]
+            },
+            "description": "Returns one published page by slug, with populated categoryId (title, slug)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Cloudinary Signature",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/media/cloudinary-signature",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "cloudinary-signature"
+              ]
+            },
+            "description": "Generates Cloudinary signed upload params (timestamp, signature, apiKey, cloudName, folder=lumilogic)."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "pageId",
+      "value": ""
+    },
+    {
+      "key": "slug",
+      "value": "home"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { errorHandler, notFound } from "./middleware/errorHandler.middleware.js"
 import adminRoutes from "./routes/admin.routes.js"
 import PublicPagesRoutes from "./routes/publicPage.routes.js"
 import MenuRoutes from "./routes/menu.routes.js"
+import mediaRoutes from "./routes/media.routes.js"
 
 
 
@@ -30,6 +31,7 @@ app.use(
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1",PublicPagesRoutes)
 app.use("/api/v1",MenuRoutes)
+app.use("/api/media", mediaRoutes);
 
 app.get("/health", (req, res) => {
   res.send("lumilogic Backend Running 🚀");
