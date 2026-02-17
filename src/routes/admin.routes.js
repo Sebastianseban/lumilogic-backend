@@ -1,7 +1,7 @@
 import express from "express";
 import { loginAdmin } from "../controllers/admin.controller.js";
 import { verifyAdminAccessToken } from "../middleware/adminAuth.middleware.js";
-import { createPage, deletePage, getAllPages, updatePage } from "../controllers/page.controller.js";
+import { createPage, deletePage, getAllPages, getPageById, updatePage } from "../controllers/page.controller.js";
 import { createCategory, deleteCategory, getCategoryById, getCategoryTree, updateCategory } from "../controllers/category.controller.js";
 
 const router = express.Router();
@@ -17,6 +17,7 @@ router.post("/login", loginAdmin);
 router.post("/pages", verifyAdminAccessToken, createPage);
 router.put("/pages/:id", verifyAdminAccessToken, updatePage);
 router.get("/pages", verifyAdminAccessToken, getAllPages);
+router.get("/pages/:id", verifyAdminAccessToken, getPageById);
 router.delete("/pages/:id", verifyAdminAccessToken, deletePage);
 
 

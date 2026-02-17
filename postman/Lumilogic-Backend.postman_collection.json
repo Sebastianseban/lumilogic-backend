@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Lumilogic Backend API",
-    "description": "Postman collection for Lumilogic backend APIs.\n\nBase URL uses {{baseUrl}}.\n\nAuth:\n- Run `Admin > Login` first to automatically set `{{accessToken}}` from response.data.accessToken.\n- Admin page endpoints use Bearer {{accessToken}}.",
+    "description": "Postman collection for Lumilogic backend APIs.\n\nBase URL uses {{baseUrl}}.\n\nAuth:\n- Run `Admin > Login` first to automatically set `{{accessToken}}` from response.data.accessToken.\n- Admin protected endpoints use `Authorization: Bearer {{accessToken}}`.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -74,122 +74,266 @@
           ]
         },
         {
-          "name": "Create Page",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
+          "name": "Pages",
+          "item": [
+            {
+              "name": "Create Page",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Home\",\n  \"slug\": \"home\",\n  \"type\": \"home\",\n  \"categoryId\": null,\n  \"blocks\": [\n    {\n      \"type\": \"hero\",\n      \"data\": {\n        \"heading\": \"Welcome to Lumilogic\",\n        \"ctaText\": \"Get Started\"\n      }\n    }\n  ],\n  \"seo\": {\n    \"title\": \"Lumilogic Home\",\n    \"description\": \"Lumilogic official homepage\"\n  },\n  \"isPublished\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/pages",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "pages"
+                  ]
+                },
+                "description": "Creates a page. Required: title, slug, type."
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Home\",\n  \"slug\": \"home\",\n  \"type\": \"home\",\n  \"categoryId\": null,\n  \"blocks\": [\n    {\n      \"type\": \"hero\",\n      \"data\": {\n        \"heading\": \"Welcome to Lumilogic\",\n        \"ctaText\": \"Get Started\"\n      }\n    }\n  ],\n  \"seo\": {\n    \"title\": \"Lumilogic Home\",\n    \"description\": \"Lumilogic official homepage\"\n  },\n  \"isPublished\": true\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/admin/pages",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "admin",
-                "pages"
-              ]
+            {
+              "name": "Get All Pages",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/pages",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "pages"
+                  ]
+                },
+                "description": "Returns all pages sorted by newest first (without blocks field)."
+              }
             },
-            "description": "Creates a page. Required: title, slug, type."
-          }
+            {
+              "name": "Update Page",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Updated Home\",\n  \"type\": \"home\",\n  \"isPublished\": true,\n  \"seo\": {\n    \"title\": \"Updated SEO Title\",\n    \"description\": \"Updated SEO Description\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "pages",
+                    "{{pageId}}"
+                  ]
+                },
+                "description": "Updates page by MongoDB _id. Note: slug is intentionally ignored by backend update logic."
+              }
+            },
+            {
+              "name": "Delete Page",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "pages",
+                    "{{pageId}}"
+                  ]
+                },
+                "description": "Deletes page by MongoDB _id."
+              }
+            }
+          ]
         },
         {
-          "name": "Get All Pages",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Create Category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Services\",\n  \"slug\": \"services\",\n  \"parentId\": null,\n  \"order\": 1,\n  \"isActive\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/categories",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "categories"
+                  ]
+                },
+                "description": "Creates category. Required: title, slug."
               }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/admin/pages",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "admin",
-                "pages"
-              ]
             },
-            "description": "Returns all pages sorted by newest first (without blocks field)."
-          }
-        },
-        {
-          "name": "Update Page",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Services Updated\",\n  \"order\": 2,\n  \"isActive\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/categories/{{categoryId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "categories",
+                    "{{categoryId}}"
+                  ]
+                },
+                "description": "Updates category by MongoDB _id."
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Updated Home\",\n  \"type\": \"home\",\n  \"isPublished\": true,\n  \"seo\": {\n    \"title\": \"Updated SEO Title\",\n    \"description\": \"Updated SEO Description\"\n  }\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "admin",
-                "pages",
-                "{{pageId}}"
-              ]
-            },
-            "description": "Updates page by MongoDB _id. Note: slug is intentionally ignored by backend update logic."
-          }
-        },
-        {
-          "name": "Delete Page",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}"
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/categories/{{categoryId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "categories",
+                    "{{categoryId}}"
+                  ]
+                },
+                "description": "Deletes category by id. Fails if category has children."
               }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/v1/admin/pages/{{pageId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "admin",
-                "pages",
-                "{{pageId}}"
-              ]
             },
-            "description": "Deletes page by MongoDB _id."
-          }
+            {
+              "name": "Get Category Tree",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/categories",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "categories"
+                  ]
+                },
+                "description": "Public/admin route. Returns active categories as nested tree."
+              }
+            },
+            {
+              "name": "Get Category By Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/categories/{{categoryId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "categories",
+                    "{{categoryId}}"
+                  ]
+                },
+                "description": "Public/admin route. Returns category document by id."
+              }
+            }
+          ]
         }
       ]
     },
@@ -292,6 +436,10 @@
     },
     {
       "key": "pageId",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
       "value": ""
     },
     {

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"; // ✅ MISSING IMPORT (IMPORTANT)
+import jwt from "jsonwebtoken";
 
 const AdminSchema = new mongoose.Schema(
   {
@@ -31,17 +31,12 @@ const AdminSchema = new mongoose.Schema(
 );
 
 // ---------------------------------------------
-// PRE SAVE HOOK
+// PRE SAVE HOOK (FIXED)
 // ---------------------------------------------
-AdminSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+AdminSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
 
-  try {
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  } catch (err) {
-    next(err);
-  }
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 // ---------------------------------------------
@@ -66,9 +61,13 @@ AdminSchema.methods.generateAccessToken = function () {
 };
 
 AdminSchema.methods.generateRefreshToken = function () {
-  return jwt.sign({ _id: this._id }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d",
-  });
+  return jwt.sign(
+    { _id: this._id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d",
+    },
+  );
 };
 
 export const Admin = mongoose.model("Admin", AdminSchema);

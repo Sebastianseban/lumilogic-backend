@@ -88,7 +88,7 @@ export const deleteCategory = async (req, res) => {
 };
 
 export const getCategoryTree = async (_req, res) => {
-  const categories = await Category.find({ isActive: true })
+  const categories = await Category.find({})
     .sort({ order: 1 })
     .lean();
 
@@ -96,14 +96,15 @@ export const getCategoryTree = async (_req, res) => {
   const tree = [];
 
   categories.forEach((cat) => {
-    map[cat._id] = { ...cat, children: [] };
+    map[cat._id.toString()] = { ...cat, children: [] };
   });
 
   categories.forEach((cat) => {
     if (cat.parentId) {
-      map[cat.parentId]?.children.push(map[cat._id]);
+      const parentId = cat.parentId.toString();
+      map[parentId]?.children.push(map[cat._id.toString()]);
     } else {
-      tree.push(map[cat._id]);
+      tree.push(map[cat._id.toString()]);
     }
   });
 
@@ -112,7 +113,6 @@ export const getCategoryTree = async (_req, res) => {
     data: tree,
   });
 };
-
 export const getCategoryById = async (req, res) => {
   const { id } = req.params;
 

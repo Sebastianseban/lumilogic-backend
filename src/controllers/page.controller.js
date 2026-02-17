@@ -76,3 +76,14 @@ export const deletePage = asyncHandler(async (req, res) => {
 
   res.json(new ApiResponse(200, null, "Page deleted successfully"));
 }); 
+
+
+export const getPageById = asyncHandler(async (req, res) => {
+  const page = await Page.findById(req.params.id);
+
+  if (!page) {
+    throw new ApiError(404, "Page not found");
+  }
+
+  res.json(new ApiResponse(200, page, "Page fetched successfully"));
+});

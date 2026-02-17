@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { seedCategories } from "./category.seed.js";
-
-import { MONGODB_URI } from "../config/config.js";
 import { seedPages } from "./page.seed.js";
+import { seedAdmin } from "./admin.seed.js";
+import { MONGODB_URI } from "../config/config.js";
 
 const runSeed = async () => {
   try {
@@ -11,6 +11,7 @@ const runSeed = async () => {
 
     const categories = await seedCategories();
     await seedPages(categories);
+    await seedAdmin();
 
     console.log("🌱 Seeding completed successfully");
     process.exit(0);
