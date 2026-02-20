@@ -197,6 +197,115 @@
           ]
         },
         {
+          "name": "Enquiries",
+          "item": [
+            {
+              "name": "Get All Enquiries",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/enquiries?page=1&limit=10&status=new&search=",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "enquiries"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "search",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Returns paginated enquiries. Optional filters: page, limit, status (new|contacted|closed|spam), search."
+              }
+            },
+            {
+              "name": "Get Enquiry By Id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/enquiries/{{enquiryId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "enquiries",
+                    "{{enquiryId}}"
+                  ]
+                },
+                "description": "Returns single enquiry by MongoDB _id."
+              }
+            },
+            {
+              "name": "Update Enquiry Status",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"contacted\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/admin/enquiries/{{enquiryId}}/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "admin",
+                    "enquiries",
+                    "{{enquiryId}}",
+                    "status"
+                  ]
+                },
+                "description": "Updates enquiry status. Allowed values: new, contacted, closed, spam."
+              }
+            }
+          ]
+        },
+        {
           "name": "Categories",
           "item": [
             {
@@ -397,6 +506,34 @@
             },
             "description": "Returns one published page by slug, with populated categoryId (title, slug)."
           }
+        },
+        {
+          "name": "Submit Enquiry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"workEmail\": \"john@company.com\",\n  \"company\": \"Acme Inc\",\n  \"serviceSlug\": \"{{serviceSlug}}\",\n  \"projectDetails\": \"Need help with cloud migration and modernization roadmap.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enquiries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enquiries"
+              ]
+            },
+            "description": "Creates website enquiry and sends email notification. serviceSlug should match a published page slug from menu/pages APIs."
+          }
         }
       ]
     },
@@ -444,6 +581,14 @@
     },
     {
       "key": "slug",
+      "value": "home"
+    },
+    {
+      "key": "enquiryId",
+      "value": ""
+    },
+    {
+      "key": "serviceSlug",
       "value": "home"
     }
   ]

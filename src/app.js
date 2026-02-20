@@ -23,11 +23,13 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://lumilogic-frontend.vercel.app"
+    ],
     credentials: true,
   })
 );
-
 
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1",PublicPagesRoutes)
